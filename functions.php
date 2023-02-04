@@ -1,8 +1,8 @@
 <?php
-
 function connect_to_db()
+
 {
-  $dbn = 'mysql:dbname=gsf_d12_18;charset=utf8mb4;port=3306;host=localhost';
+  $dbn = 'mysql:dbname=gs;charset=utf8mb4;port=3306;host=localhost';
   $user = 'root';
   $pwd = '';
 
@@ -16,11 +16,9 @@ function connect_to_db()
 
 function check_session_id()
 {
-  if (
-    !isset($_SESSION["session_id"]) ||
-    $_SESSION["session_id"] != session_id()
-  ) {
-    header("Location:todo_login.php");
+  if (!isset($_SESSION["session_id"]) || $_SESSION["session_id"] !== session_id()) {
+    header('Location:login.php');
+    exit();
   } else {
     session_regenerate_id(true);
     $_SESSION["session_id"] = session_id();

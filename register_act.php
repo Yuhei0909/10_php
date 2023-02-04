@@ -3,10 +3,9 @@ include('functions.php');
 
 if (
   !isset($_POST['username']) || $_POST['username'] === '' ||
-  !isset($_POST['username']) || $_POST['username'] === ''
+  !isset($_POST['password']) || $_POST['password'] === ''
 ) {
-  echo json_encode(["error_msg" => "no input"]);
-  exit();
+  exit('paramError');
 }
 
 $username = $_POST["username"];
@@ -14,7 +13,7 @@ $password = $_POST["password"];
 
 $pdo = connect_to_db();
 
-$sql = 'SELECT COUNT(*) FROM users_table WHERE username=:username';
+$sql = 'SELECT COUNT(*) FROM users WHERE username=:username';
 
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':username', $username, PDO::PARAM_STR);
@@ -27,12 +26,12 @@ try {
 }
 
 if ($stmt->fetchColumn() > 0) {
-  echo "<p>すでに登録されているユーザです．</p>";
-  echo '<a href="todo_login.php">login</a>';
+  echo '<p>This user is already registered.</p>';
+  echo '<a href="login.php">Login</a>';
   exit();
 }
 
-$sql = 'INSERT INTO users_table(id, username, password, is_admin, created_at, updated_at, deleted_at) VALUES(NULL, :username, :password, 0, now(), now(), NULL)';
+$sql = 'INSERT INTO users(id, username, password, is_admin, created_at, updated_at, deleted_at) VALUES(NULL, :username, :password, 0, now(), now(), NULL)';
 
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':username', $username, PDO::PARAM_STR);
@@ -45,5 +44,5 @@ try {
   exit();
 }
 
-header("Location:todo_login.php");
+header("Location:login.php");
 exit();
